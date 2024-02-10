@@ -1,0 +1,13 @@
+name: 'Check NPM Version Match'
+description: 'Checks if the git tag version matches the version specified in package.json.'
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        TAG_VERSION=${GITHUB_REF#refs/tags/v}
+        PACKAGE_VERSION=$(node -p "require('./package.json').version")
+        if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+          echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)"
+          exit 1
+        fi
+      shell: bash
